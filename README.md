@@ -20,6 +20,24 @@ then implements *only* what those diagrams and scenarios allow.
 
 ## English
 
+### Quickstart
+
+```sh
+npx skills add xxy757/backend-spec-flow -g      # user-level: every project
+# without -g, run inside a project:              installs to ./.agents/skills/
+
+ls ~/.agents/skills/backend-spec-flow/SKILL.md  # confirm a user-level install
+ls .agents/skills/backend-spec-flow/SKILL.md    # confirm a project-level install
+```
+
+Then ask your agent:
+
+> Use backend-spec-flow to design the business flow and data flow for creating a note. Design only for now.
+
+Expected behavior: it first asks whether you want design, implementation or acceptance, then writes a `design.md` holding two Mermaid diagrams and an empty design-confirmation table, and stops until you confirm.
+
+**Requires:** Node.js 22.20+ for the `skills` CLI, a Mermaid-capable viewer, and the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1. The skill's instructions and templates are Chinese, so the agent answers in Chinese for those parts.
+
 ### What it does
 
 `backend-spec-flow` is an [Agent Skill](https://agentskills.io) for backend features and data pipelines. For every feature it produces, in order:
@@ -40,21 +58,19 @@ This skill removes the ambiguity. The diagrams and OpenSpec change become the au
 
 ### Install
 
-```sh
-npx skills add xxy757/backend-spec-flow
-```
+The `skills` CLI installs into `.agents/skills/`, which Codex, Cursor, Gemini CLI, Copilot and similar runtimes read directly, and symlinks the skill into any runtime that needs its own directory (Claude Code and others). `-g` installs user-level; without it the skill stays in the current project.
 
-Manual install — clone into your runtime's skills directory:
+Manual install — clone straight into a runtime's skills directory:
 
 ```sh
-git clone https://github.com/xxy757/backend-spec-flow.git \
-  ~/.claude/skills/backend-spec-flow          # Claude Code
-# or ~/.codex/skills/backend-spec-flow        # Codex
-# or ~/.pi/agent/skills/backend-spec-flow     # Pi
-# or .claude/skills/backend-spec-flow         # project-scoped
+git clone https://github.com/xxy757/backend-spec-flow.git ~/.claude/skills/backend-spec-flow
+# swap the target for your runtime:
+#   ~/.codex/skills/backend-spec-flow      (Codex)
+#   ~/.pi/agent/skills/backend-spec-flow   (Pi)
+#   .claude/skills/backend-spec-flow       (project-scoped)
 ```
 
-**Requires:** a Mermaid-capable viewer and the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1 (validated against 1.4.1):
+**Requires:** Node.js 22.20+, a Mermaid-capable viewer, and the [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1 (validated against 1.4.1):
 
 ```sh
 npm install -g @fission-ai/openspec
@@ -117,7 +133,7 @@ assets/backend-diagram-flow/   # OpenSpec custom schema + four artifact template
 
 ### Limitations
 
-- The skill body is Chinese; only this README and the schema instructions' structure are English.
+- The skill body, references and templates are Chinese. This README documents the workflow in English, but expect the agent to answer in Chinese for the design and spec content.
 - Tightly coupled to OpenSpec CLI 1.4.1 behavior. Newer or older versions may need `openspec instructions`/`apply` adjustments — run `openspec --help` first.
 - Mermaid is validated by reading or by whatever renderer your environment has. If nothing can render it, the skill writes "render not verified" rather than claiming a pass.
 - Design confirmation is a human gate. The skill records the user's actual confirmation and refuses to self-approve, but nothing enforces that beyond the agent following the instructions.
@@ -129,6 +145,24 @@ MIT — see [LICENSE](LICENSE).
 ---
 
 ## 中文
+
+### 快速开始
+
+```sh
+npx skills add xxy757/backend-spec-flow -g      # 用户级：所有项目可用
+# 不加 -g 并在项目目录内执行：                  装到 ./.agents/skills/
+
+ls ~/.agents/skills/backend-spec-flow/SKILL.md  # 确认用户级安装
+ls .agents/skills/backend-spec-flow/SKILL.md    # 确认项目级安装
+```
+
+然后对 agent 说：
+
+> 用 backend-spec-flow 给「创建便签」设计业务流程和数据流，这次只做设计。
+
+正常表现：先确认你要设计、实现还是验收，再产出含两张 Mermaid 图的 `design.md` 和空的设计确认表，等你确认后才进入实现。
+
+**前提：** `skills` CLI 需要 Node.js 22.20+，看图需要能渲染 Mermaid 的阅读器，写规格需要 [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1。
 
 ### 它做什么
 
@@ -150,21 +184,19 @@ MIT — see [LICENSE](LICENSE).
 
 ### 安装
 
-```sh
-npx skills add xxy757/backend-spec-flow
-```
+`skills` CLI 会把 skill 装进 `.agents/skills/`（Codex、Cursor、Gemini CLI、Copilot 等直接读这里），并给需要独立目录的 runtime 建软链（Claude Code 等）。加 `-g` 是用户级安装，不加则只留在当前项目。
 
-手动安装：克隆到对应 runtime 的 skills 目录
+手动安装：直接克隆到对应 runtime 的 skills 目录
 
 ```sh
-git clone https://github.com/xxy757/backend-spec-flow.git \
-  ~/.claude/skills/backend-spec-flow          # Claude Code
-# 或 ~/.codex/skills/backend-spec-flow        # Codex
-# 或 ~/.pi/agent/skills/backend-spec-flow     # Pi
-# 或 .claude/skills/backend-spec-flow         # 项目级
+git clone https://github.com/xxy757/backend-spec-flow.git ~/.claude/skills/backend-spec-flow
+# 按需替换目标路径：
+#   ~/.codex/skills/backend-spec-flow      （Codex）
+#   ~/.pi/agent/skills/backend-spec-flow   （Pi）
+#   .claude/skills/backend-spec-flow       （项目级）
 ```
 
-**依赖：** 能渲染 Mermaid 的阅读器，以及 [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1（本仓库按 1.4.1 验证）：
+**依赖：** Node.js 22.20+、能渲染 Mermaid 的阅读器，以及 [OpenSpec CLI](https://github.com/Fission-AI/OpenSpec) ≥ 1.4.1（本仓库按 1.4.1 验证）：
 
 ```sh
 npm install -g @fission-ai/openspec
