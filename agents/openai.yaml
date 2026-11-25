@@ -1,0 +1,3 @@
+interface:
+  display_name: "后端图与规格驱动开发"
+  short_description: "用 Mermaid 业务图与数据图确定设计，在 OpenSpec 中约束实现并逐项验收"

@@ -1,0 +1,62 @@
+name: backend-diagram-flow
+version: 1
+description: 后端业务图和数据图驱动开发，proposal → design → specs → tasks。
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: 明确需求范围、能力和非目标
+    template: proposal.md
+    instruction: |
+      阅读相关代码与现有规格，区分事实和目标。明确 Why、What Changes、Capabilities 和 Impact。
+      能力使用现有 OpenSpec 路径，新能力按项目惯例命名，不创建近义重复能力。
+      只覆盖本次 MVP 范围。不要因模板存在就增加依赖、后台任务或通用架构。
+    requires: []
+  - id: design
+    generates: design.md
+    description: Mermaid 图、技术约束和设计确认记录
+    template: design.md
+    instruction: |
+      design.md 为必需产物及图的阅读入口。写出不同视角的 Mermaid 业务流程图和数据流图。
+      业务图表达步骤和条件；数据图表达来源、转换、读写和输出，连线标注数据。
+      涉及跨模块交互时补时序图，有生命周期时补状态图，变更实体关系时补 ER 图。
+      已有权威图可链接并核对，不复制维护。Markdown 是权威源，HTML 只能是派生预览。
+      写明具体最小实现约束及非目标，不自行增加重试、降级、缓存、兼容层或架构抽象。
+      保留必要校验和现有权限要求。不要为填充风险章节增加假设性加固。
+      设计确认初始为草稿；只有用户确认已展示的具体设计或明确要求按该设计实施时才标已确认。
+      记录设计版本、Spec 路径、确认范围、用户确认原话及可定位来源，禁止编造。
+      后续 specs 形成后核对图和规格一致性，再完成确认；不能仅凭文件存在判定已确认。
+    requires: [proposal]
+  - id: specs
+    generates: specs/**/*.md
+    description: 与设计一致的行为规格及可验收场景
+    template: spec.md
+    instruction: |
+      读取 proposal、design 和相关现有主规格。按 capability 写行为契约，涵盖输入、输出、错误及数据副作用。
+      使用 ## ADDED Requirements、## MODIFIED Requirements、## REMOVED Requirements 或 ## RENAMED Requirements。
+      每个 ### Requirement 使用 SHALL/MUST 表达约束，至少包含一个 #### Scenario，以 WHEN/THEN 表达可观察结果。
+      MODIFIED 必须复制并修改完整的原 Requirement 及其所有场景，避免同步时丢失原有行为。
+      REMOVED 写 Reason 与 Migration；RENAMED 使用 FROM/TO。仅保留实际使用的操作章节。
+      不把类名、函数名和内部实现步骤写成行为需求，它们属于 design.md 和 tasks.md。
+      链接 design.md 中相关图节点；与图发生冲突时先修正草稿，不静默采用不同逻辑。
+      规格表达用户行为，禁止为满足校验虚构需求；每个新增能力提供有实质内容的 Purpose。
+    requires: [proposal, design]
+  - id: tasks
+    generates: tasks.md
+    description: 按设计拆分可跟踪的实现与验证任务
+    template: tasks.md
+    instruction: |
+      按依赖顺序编写小任务，使用 - [ ] 1.1 描述 格式。
+      每项实现任务关联需求/场景与设计图路径，验证任务写明预期结果。
+      仅拆分确定的范围，不凭空加入缓存、重试、兼容层或重构任务。
+      确认尚未完成时明确实施前提；不得自动勾选任务或编造测试结果。
+    requires: [specs, design]
+apply:
+  requires: [proposal, design, specs, tasks]
+  tracks: tasks.md
+  instruction: |
+    读取 contextFiles 及其中链接的图，核对 design.md 的设计版本、确认来源、范围和当前 Spec 一致。
+    文件齐全不代表用户确认。草稿、确认已失效或来源不明时，展示具体图和规格供用户确定，未决部分不实现。
+    已有确认涵盖当前内容时直接继续，不重复询问。用户明确要求的无歧义变更可记录为该差异的确认依据。
+    按待办任务最小实现，不自行加入未约定的业务分支、状态、重试、降级、缓存或架构层。
+    发现设计变化先更新图与 Spec 并处理确认范围，再继续相关任务；不得事后改文档掩盖偏离。
+    任务实际完成后才勾选；验证任务有实际证据才算完成。在 verification.md 对照规格、图、实现和测试。
